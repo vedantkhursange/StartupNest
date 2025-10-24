@@ -1,11 +1,12 @@
 import { GoogleGenerativeAI } from "@google/generative-ai"
 import { NextRequest, NextResponse } from "next/server"
 
-// ⚠️ SECURITY: Use server-side env variable (no NEXT_PUBLIC_ prefix)
-const API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY
+// Use server-side environment variable
+const API_KEY = process.env.GEMINI_API_KEY
 
 if (!API_KEY) {
   console.error("❌ GEMINI_API_KEY is not set in environment variables")
+  throw new Error("GEMINI_API_KEY is not set")
 }
 
 const genAI = new GoogleGenerativeAI(API_KEY || "")
