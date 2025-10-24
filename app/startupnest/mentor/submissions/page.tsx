@@ -42,13 +42,15 @@ export default function MentorSubmissions() {
   const [showPdfModal, setShowPdfModal] = useState(false)
   const [pdfUrl, setPdfUrl] = useState<string | null>(null)
   const [selectedPdfName, setSelectedPdfName] = useState<string>("")
+  const API_URL = process.env.NEXT_PUBLIC_API_URL
+
 
   const debouncedSearchValue = useDebounce(searchValue, 500)
 
   const handleViewPDF = async (submissionId: string) => {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/startupSubmission/getStartupSubmissionById/${submissionId}?includeFile=true`
+        `${API_URL}/api/startupSubmission/getStartupSubmissionById/${submissionId}?includeFile=true`
       );
       const data = await response.json();
       
@@ -90,7 +92,7 @@ export default function MentorSubmissions() {
   const fetchSubmissions = async () => {
     try {
       setIsLoading(true)
-      const response = await fetch("http://localhost:8080/api/startupSubmission/getAllStartupSubmissions", {
+      const response = await fetch(`${API_URL}/api/startupSubmission/getAllStartupSubmissions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -118,7 +120,7 @@ export default function MentorSubmissions() {
     try {
       const token = localStorage.getItem("token")
       const response = await fetch(
-        `http://localhost:8080/api/startupSubmission/updateStartupSubmission/${submissionId}`,
+        `${API_URL}/api/startupSubmission/updateStartupSubmission/${submissionId}`,
         {
           method: "PUT",
           headers: {

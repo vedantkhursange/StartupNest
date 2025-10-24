@@ -1,5 +1,5 @@
 // API URL configuration
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+export const API_URL = process.env.NEXT_PUBLIC_API_URL 
 
 // Helper function to get full API URL
 export const getApiUrl = (endpoint: string) => {

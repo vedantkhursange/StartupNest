@@ -1,5 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api"
-
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 interface ApiResponse<T> {
   success: boolean
   data?: T
@@ -20,14 +19,15 @@ export class ApiError extends Error {
 export async function apiCall<T>(endpoint: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
   try {
     const token = localStorage.getItem("token")
-    const headers: HeadersInit = {
+    const headers: Record<string, string> = {
       "Content-Type": "application/json",
-      ...options.headers,
+      ...(options.headers as Record<string, string>),
     }
 
     if (token) {
-      headers.Authorization = `Bearer ${token}`
+      headers["Authorization"] = `Bearer ${token}`
     }
+
 
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       ...options,

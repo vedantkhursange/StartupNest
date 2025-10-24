@@ -51,7 +51,7 @@ export default function ViewProfiles() {
     try {
       setIsLoading(true)
       const response = await fetch(
-        `http://localhost:8080/api/startupProfile/getStartupProfilesByMentorId/${userId}?page=${currentPage}&pageSize=${pageSize}&sortBy=${sortBy}&sortValue=${sortValue}&search=${debouncedSearchValue}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/startupProfile/getStartupProfilesByMentorId/${userId}?page=${currentPage}&pageSize=${pageSize}&sortBy=${sortBy}&sortValue=${sortValue}&search=${debouncedSearchValue}`,
       )
       const data = await response.json()
       setProfiles(data.profiles || data)
@@ -69,7 +69,7 @@ export default function ViewProfiles() {
     try {
       const token = localStorage.getItem("token")
       const response = await fetch(
-        `http://localhost:8080/api/startupProfile/deleteStartupProfile/${selectedProfileId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/startupProfile/deleteStartupProfile/${selectedProfileId}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
