@@ -12,6 +12,7 @@ interface Message {
 
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false)
+  const [isEnabled, setIsEnabled] = useState(true)
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
@@ -25,6 +26,23 @@ export default function ChatBot() {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const { error, success } = useToast()
 
+  useEffect(() => {
+    // Check if chatbot is enabled by making a test request
+    fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: 'test' })
+    }).catch(() => {
+      setIsEnabled(false)
+      setMessages([{
+        id: "1",
+        text: "Sorry, the chatbot is currently unavailable. Please try again later.",
+        sender: "bot",
+        timestamp: new Date(),
+      }])
+    })
+  }, [])
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
@@ -34,7 +52,7 @@ export default function ChatBot() {
   }, [messages])
 
   const handleSendMessage = async () => {
-    if (!inputValue.trim()) return
+    if (!inputValue.trim() || !isEnabled) return
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -172,13 +190,13 @@ export default function ChatBot() {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-              placeholder="Ask me anything..."
+              placeholder={isEnabled ? "Ask me anything..." : "Chatbot is currently unavailable"}
               className="flex-1 px-3 py-2 bg-input border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all text-sm"
-              disabled={isLoading}
+              disabled={isLoading || !isEnabled}
             />
             <button
               onClick={handleSendMessage}
-              disabled={isLoading || !inputValue.trim()}
+              disabled={isLoading || !inputValue.trim() || !isEnabled}
               className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50 transition-all transform hover:scale-105 active:scale-95"
             >
               Send
