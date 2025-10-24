@@ -5,6 +5,11 @@ require("dotenv").config()
 
 const app = express()
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok', message: 'Server is running' })
+})
+
 // Middleware
 app.use(express.json({ limit: '50mb' })) // Increased limit to handle large PDFs
 app.use(express.urlencoded({ limit: '50mb', extended: true }))
