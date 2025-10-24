@@ -16,7 +16,11 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }))
 // CORS configuration
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? process.env.ALLOWED_ORIGINS?.split(',') || ['https://startupnest.vercel.app', 'https://startupnest-git-main.vercel.app'] 
+    ? process.env.ALLOWED_ORIGINS?.split(',') || [
+      'https://startupnest.vercel.app',
+      'https://startupnest-git-main.vercel.app',
+      'https://startupnest-qduexuiqg-vedantkhursanges-projects.vercel.app'
+    ] 
     : ['http://localhost:3000'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
