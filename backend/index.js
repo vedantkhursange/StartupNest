@@ -34,6 +34,14 @@ const connectWithRetry = () => {
   })
 
   // Then try to connect to MongoDB
+  // Log the connection attempt
+  console.log("Attempting to connect to MongoDB...")
+  if (process.env.MONGODB_URI) {
+    console.log("Using MongoDB URI from environment variable")
+  } else {
+    console.log("Warning: Using fallback local MongoDB URI")
+  }
+
   mongoose
     .connect(process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/startupnest", {
       useNewUrlParser: true,
@@ -43,9 +51,19 @@ const connectWithRetry = () => {
     })
     .then(() => {
       console.log("MongoDB connected successfully")
+      // Log successful connection details
+      const connection = mongoose.connection;
+      console.log(`Connected to database: ${connection.name}`);
+      console.log(`Host: ${connection.host}`);
+      console.log(`Port: ${connection.port}`);
     })
     .catch((err) => {
       console.error("MongoDB connection error:", err)
+      // Log more detailed error information
+      if (err.name === 'MongoServerError') {
+        console.error("MongoDB Server Error Code:", err.code)
+        console.error("MongoDB Server Error CodeName:", err.codeName)
+      }
       console.log("Retrying connection in 5 seconds...")
       setTimeout(connectWithRetry, 5000)
     })
