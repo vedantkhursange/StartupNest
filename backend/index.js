@@ -27,6 +27,13 @@ app.use(cors({
 
 // MongoDB Connection
 const connectWithRetry = () => {
+  // Start server immediately
+  const PORT = process.env.PORT || 8080
+  const server = app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`)
+  })
+
+  // Then try to connect to MongoDB
   mongoose
     .connect(process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/startupnest", {
       useNewUrlParser: true,
@@ -36,11 +43,6 @@ const connectWithRetry = () => {
     })
     .then(() => {
       console.log("MongoDB connected successfully")
-      // Start server only after DB connection
-      const PORT = process.env.PORT || 8080
-      app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`)
-      })
     })
     .catch((err) => {
       console.error("MongoDB connection error:", err)
